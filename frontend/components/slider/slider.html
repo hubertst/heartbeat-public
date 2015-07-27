@@ -4,8 +4,11 @@
 <dom-module id="hb-slider">
   <template>
     <template is="dom-repeat" id="slides" items="{{slides}}">
-      <slide duration="item.duration"></slide>
+      <hb-slide message="{{item.message}}"
+                duration="{{item.duration}}">
+      </hb-slide>
     </template>
+    <div></div>
 
     <socket-connection endpoint="messages"
                        on-data="onData">
@@ -19,7 +22,39 @@
         'time-per-slide': String
       },
       onData: function(ev, data) {
-        this.slides = data;
+        this.slides = data.messages;
+        this.slideIndex = 0;
+        this.slideStartTime = new Date();
+        this.async(function () {
+          this.invalidateSlide();
+        });
+      },
+      ready: function() {
+        var that = this;
+        setInterval(function() {
+          that.async(that.slide);
+        }, 1000);
+      },
+      isVisible: function(item) {
+        return this.slides.indexOf(item) === this.slideIndex;
+      },
+      slide: function() {
+        var currentTime = new Date();
+        var currentSlideDuration = this.slides[this.slideIndex].duration;
+        if ((currentTime - this.slideStartTime) >= 2000) { // currentSlideDuration
+          this.slideIndex = (this.slideIndex + 1) % this.slides.length;
+          this.slideStartTime = currentTime;
+          this.invalidateSlide();
+        }
+      },
+      invalidateSlide: function () {
+        var $slides = Polymer.dom(this.root).querySelectorAll('hb-slide');
+        var that = this;
+        if ($slides.length) {
+          $slides.forEach(function (slide, index) {
+            slide.hidden = (index === that.slideIndex);
+          });
+        }
       }
     })
   </script>
