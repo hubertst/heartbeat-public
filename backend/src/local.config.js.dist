@@ -33,7 +33,10 @@ module.exports = exports = {
             serverUrl: 'http://188.226.224.148/data/2.5/weather?q=Warsaw,pl',
         },
         projects: {
-            spreadsheetKey: '18VRrg69yw30ZudRKIwWc4_6Gvo2f-zjN5mBxtXb59BE',
+            spreadsheetKey: '',
         },
+        messages: {
+            spreadsheetKey: ''
+        }
     }
 };

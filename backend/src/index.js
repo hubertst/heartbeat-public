@@ -20,6 +20,7 @@ var Hapi       = require('hapi');
 var httpServer = new Hapi.Server();
 var io         = require('socket.io')(config.WebSocketsPort);
 var merge      = require('merge');
+var _          = require('lodash');
 
 var logger = require('./utils/logger');
 var cache  = require('./utils/cache');
@@ -32,7 +33,8 @@ var SupportedPlugins = [
     require('./plugins/breaking'),
     require('./plugins/network'),
     require('./plugins/slack'),
-    require('./plugins/projects')
+    require('./plugins/projects'),
+    require('./plugins/messages'),
 ];
 SupportedPlugins.forEach(function (plugin) {
     merge(plugin.options, config.plugins[plugin.uniqueId]);
@@ -42,6 +44,7 @@ var pluginsResults = {};
 var refetchPluginData = co(function* refetchPluginData(plugin) {
     logger.info('Refetching %s data.', plugin.uniqueId);
     var oldData = pluginsResults[plugin.uniqueId];
+
     try {
         pluginsResults[plugin.uniqueId] = yield plugin.fetchData(oldData || {});
     }
@@ -52,7 +55,8 @@ var refetchPluginData = co(function* refetchPluginData(plugin) {
         }
     }
     var result = pluginsResults[plugin.uniqueId];
-    if (result !== oldData) {
+
+    if (!_.isEqual(result, oldData)) {
         io.emit(plugin.uniqueId, result);
         cache.store(pluginsResults);
     }

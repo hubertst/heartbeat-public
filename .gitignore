@@ -1,6 +1,7 @@
 backend/node_modules
 backend/npm-debug.log
 backend/logs/good.log
+backend/data/results.json
 frontend/bower_components
 *.sublime-*
 .idea/

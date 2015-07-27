@@ -1,0 +1,31 @@
+<dom-module id="hb-message">
+  <style>
+    :host {
+      color: white;
+      background-color: #ffb600;
+    }
+
+    :host p {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      top: 50%;
+      font-size: 40px;
+      margin: 0;
+      transform: translateY(-50%);
+    }
+  </style>
+
+  <template>
+    <p>{{ message }}</p>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'hb-message',
+      properties: {
+        'message': String
+      }
+    })
+  </script>
+</dom-module>
