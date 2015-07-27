@@ -32,7 +32,8 @@ var SupportedPlugins = [
     require('./plugins/weather'),
     require('./plugins/breaking'),
     require('./plugins/network'),
-    require('./plugins/slack')
+    require('./plugins/slack'),
+    require('./plugins/messages')
 ];
 SupportedPlugins.forEach(function (plugin) {
     merge(plugin.options, config.plugins[plugin.uniqueId]);

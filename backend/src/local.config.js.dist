@@ -32,5 +32,8 @@ module.exports = exports = {
         weather: {
             serverUrl: 'http://188.226.224.148/data/2.5/weather?q=Warsaw,pl',
         },
+        messages: {
+            spreadsheetKey: ''
+        }
     }
 };
