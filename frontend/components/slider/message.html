@@ -1,0 +1,20 @@
+<dom-module id="hb-message">
+  <style>
+    :host {
+      color: white;
+    }
+  </style>
+
+  <template>
+    <p>{{ message }}</p>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'hb-message',
+      properties: {
+        'message': String
+      }
+    })
+  </script>
+</dom-module>
