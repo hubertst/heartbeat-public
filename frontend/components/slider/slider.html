@@ -16,6 +16,7 @@
       width: 100%;
       height: 100%;
       position: absolute;
+      color: white;
     }
   </style>
 
@@ -58,12 +59,17 @@
       },
       slide: function() {
         var currentTime = new Date();
-        var currentSlideDuration = this.isProjectVisible ? 5000 : this.slides[this.slideIndex].duration;
+        var projectsDuration = 1000 * 60;
+        var currentSlideDuration = this.isProjectVisible ?
+          projectsDuration :
+          this.slides[this.slideIndex].duration;
+
         if ((currentTime - this.slideStartTime) >= currentSlideDuration) {
           this.isProjectVisible = !this.isProjectVisible;
           if (this.isProjectVisible) {
             this.slideIndex = (this.slideIndex + 1) % this.slides.length;
           }
+          console.log(this.slideIndex)
           this.slideStartTime = currentTime;
           this.invalidateSlide(this.isProjectVisible);
         }
@@ -73,7 +79,7 @@
         var that = this;
         if ($slides.length) {
           $slides.forEach(function (slide, index) {
-            slide.hidden = hideAll || (index === that.slideIndex);
+            slide.hidden = hideAll || (index !== that.slideIndex);
           });
         }
       }
