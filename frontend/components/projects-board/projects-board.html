@@ -11,10 +11,18 @@
       flex-wrap: nowrap;
       justify-content: space-between;
       background-color: black;
+      height: 156px;
     }
     #projects-graph-legend {
       display: flex;
       flex-grow: 2;
+      background:
+        url('../../icons/icon-legend-happy.png') top center no-repeat,
+        url('../../icons/icon-legend-sleep.png') center center no-repeat,
+        url('../../icons/icon-legend-unhappy.png') bottom center no-repeat;
+      background-color: #565752;
+      color: white;
+      padding: 2em 0;
     }
     .project {
       display: flex;
@@ -35,6 +43,7 @@
     }
     .project-artifact img {
       margin-bottom: 30px;
+      height: 90px;
     }
     value, description {
       display: block;
@@ -52,9 +61,7 @@
   <template>
     <div id="projects-graph-wrapper">
       <div id="projects-graph">
-        <div id="projects-graph-legend">
-          legenda
-        </div>
+        <div id="projects-graph-legend"></div>
         <template is="dom-repeat" id="projects" items="{{projects}}" as="project">
           <template is="dom-if" if="{{ project.visible }}">
             <div class="project">{{ project.projectshortname }}</div>
