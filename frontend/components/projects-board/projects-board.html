@@ -1,0 +1,113 @@
+<link rel="import" href="../socket-connection.html">
+
+<dom-module id="hb-projects-board">
+  <style>
+    :host {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      background-color: black;
+    }
+    .project-artifact {
+      flex: 1;
+    }
+    value, description {
+      display: block;
+      text-align: center;
+    }
+    value {
+      color: #ffffff;
+    }
+    description {
+      color: #113738;
+    }
+  </style>
+
+  <template>
+      <template is="dom-repeat" id="projects" items="{{projects}}">
+        <div>{{ projects }}</div>
+      </template>
+      <template is="dom-repeat" id="projectArtifact" items="{{projectArtifacts}}" as="artifact">
+          <div class="project-artifact">
+            <value class$="{{ artifact.icon }}"></value>
+            <description>{{artifact.name}}</description>
+          </div>
+      </template>
+    <socket-connection endpoint="projects"
+                       on-data="onData">
+  </template>
+
+  <script>
+    (function () {
+      function getProjectInfo(projectsList, idx) {
+        return [{
+              name: 'Team Spirit',
+              icon: valueIconsMap[projectsList[idx]['teamspirit']]
+            }, {
+              name: 'Client Mood',
+              icon: valueIconsMap[projectsList[idx]['clientmood']]
+            }, {
+              name: 'Scrum daily',
+              icon: valueIconsMap[projectsList[idx]['scrumdaily']]
+            }, {
+              name: 'Scrum planning',
+              icon: valueIconsMap[projectsList[idx]['scrumplanning']]
+            }, {
+              name: 'Scrum retro',
+              icon: valueIconsMap[projectsList[idx]['scrumplanning']]
+            }
+          ];
+      };
+
+      function projectEvaluation() {
+        var projectsum = 0;
+        var nonEmptyArguments = 0;
+        for(var i = 0, j = arguments.length; i < j; i++) {
+          if(arguments[i] !== '') {
+            projectsum += parseInt(arguments[i], 10);
+            nonEmptyArguments++;
+          }
+        }
+        if (projectsum === 0 && nonEmptyArguments === 0) {
+          return 0;
+        } else {
+          return console.log((projectsum/nonEmptyArguments) * 100);
+        }
+      };
+
+      var valueIconsMap = {
+        '-1': 'icon-emo-unhappy',
+        '0': 'icon-emo-sleep',
+        '1': 'icon-emo-happy',
+        '': 'icon-cancel'
+      };
+
+      Polymer({
+        is: 'hb-projects-board',
+        onData: function (ev, data) {
+          var projectsList = data.projectsList;
+          var projects = [];
+          projectsList.forEach(function (el) {
+            projects.push({
+              'projectname': el.projectname,
+              'projectshortname': el.projectshortname,
+              'projectevaluation': projectEvaluation(el.teamspirit, el.clientmood, el.scrumdaily, el.scrumplanning,
+                  el.scrumplanning)
+            });
+          });
+          var idx = 0;
+          var that = this;
+          that.projectArtifacts = getProjectInfo(projectsList, idx);
+          idx++;
+
+          setInterval(function () {
+            that.projectArtifacts = getProjectInfo(projectsList, idx);
+            idx++;
+            if (idx > projectsList.length - 1) idx = 0;
+          }, 200);
+        }
+      });
+    })();
+  </script>
+</dom-module>
