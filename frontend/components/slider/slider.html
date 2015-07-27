@@ -1,14 +1,18 @@
-<link rel="import" href="slide.html">
+<link rel="import" href="message.html">
 <link rel="import" href="../socket-connection.html">
 
 <dom-module id="hb-slider">
+  <style>
+  </style>
+
   <template>
     <template is="dom-repeat" id="slides" items="{{slides}}">
-      <hb-slide message="{{item.message}}"
-                duration="{{item.duration}}">
-      </hb-slide>
+      <hb-message message="{{item.message}}">
+      </hb-message>
     </template>
-    <div></div>
+    <template is="dom-if" if="{{isProjectVisible}}">
+      <p style="color: white">project</p>
+    </template>
 
     <socket-connection endpoint="messages"
                        on-data="onData">
@@ -22,17 +26,17 @@
         'time-per-slide': String
       },
       onData: function(ev, data) {
-        this.slides = data.messages;
-        this.slideIndex = 0;
-        this.slideStartTime = new Date();
-        this.async(function () {
-          this.invalidateSlide();
-        });
-      },
-      ready: function() {
         var that = this;
+        that.slides = data.messages;
+        that.slideIndex = 0;
+        that.slideStartTime = new Date();
+        that.async(function () {
+          that.invalidateSlide();
+        });
         setInterval(function() {
-          that.async(that.slide);
+          that.async(function () {
+            that.slide();
+          });
         }, 1000);
       },
       isVisible: function(item) {
@@ -40,19 +44,22 @@
       },
       slide: function() {
         var currentTime = new Date();
-        var currentSlideDuration = this.slides[this.slideIndex].duration;
-        if ((currentTime - this.slideStartTime) >= 2000) { // currentSlideDuration
-          this.slideIndex = (this.slideIndex + 1) % this.slides.length;
+        var currentSlideDuration = this.isProjectVisible ? 5000 : this.slides[this.slideIndex].duration;
+        if ((currentTime - this.slideStartTime) >= currentSlideDuration) {
+          this.isProjectVisible = !this.isProjectVisible;
+          if (this.isProjectVisible) {
+            this.slideIndex = (this.slideIndex + 1) % this.slides.length;
+          }
           this.slideStartTime = currentTime;
-          this.invalidateSlide();
+          this.invalidateSlide(this.isProjectVisible);
         }
       },
-      invalidateSlide: function () {
-        var $slides = Polymer.dom(this.root).querySelectorAll('hb-slide');
+      invalidateSlide: function (hideAll) {
+        var $slides = Polymer.dom(this.root).querySelectorAll('hb-message');
         var that = this;
         if ($slides.length) {
           $slides.forEach(function (slide, index) {
-            slide.hidden = (index === that.slideIndex);
+            slide.hidden = hideAll || (index === that.slideIndex);
           });
         }
       }
