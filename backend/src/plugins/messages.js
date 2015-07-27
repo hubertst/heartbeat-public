@@ -12,13 +12,13 @@ module.exports = exports = {
     fetchData: co(fetchData)
 };
 
-var projectsSheet;
+var spreadsheet;
 function loadSpreadsheet(spreadsheetKey) {
-    if(!projectsSheet) {
-        projectsSheet = new GoogleSpreadsheet(spreadsheetKey);
-        projectsSheet.getRowsAsync = Promise.promisify(projectsSheet.getRows);
+    if(!spreadsheet) {
+        spreadsheet = new GoogleSpreadsheet(spreadsheetKey);
+        spreadsheet.getRowsAsync = Promise.promisify(spreadsheet.getRows);
     }
-    return projectsSheet;
+    return spreadsheet;
 }
 
 function* fetchData() {
