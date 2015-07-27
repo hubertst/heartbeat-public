@@ -127,14 +127,11 @@
         var visibleNum = 0;
         var visible = false;
         projectsList.forEach(function (el, idx) {
-          if(offset + 9 > projectsList.length) {
-            var curElem = projectsList.length - offset;
-            if (curElem === idx && visibleNum < 8) {
-              console.log()
-              visible = true;
-              visibleNum++;
-            }
+          console.log(offset, idx, visibleNum);
+          if (visibleNum < 8) {
+            visibleNum++;
           }
+
           projects.push({
             'projectname': el.projectname,
             'projectshortname': el.projectshortname,
@@ -168,7 +165,7 @@
             that.projectArtifacts = getProjectInfo(projectsList, idx);
             idx++;
             if (idx > projectsList.length - 1) idx = 0;
-          }, 200);
+          }, 1000);
         }
       });
     })();
