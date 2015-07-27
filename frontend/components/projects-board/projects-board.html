@@ -28,7 +28,13 @@
       background-color: black;
     }
     .project-artifact {
-      flex: 1 1 100%;
+      padding: 2em 0;
+      width: 20%;
+      background-color: #A9E4CD;
+      text-align: center;
+    }
+    .project-artifact img {
+      margin-bottom: 30px;
     }
     value, description {
       display: block;
@@ -39,6 +45,7 @@
     }
     description {
       color: #113738;
+      font-size: 28px;
     }
   </style>
 
@@ -59,7 +66,7 @@
       <div id="project-artifacts">
         <template is="dom-repeat" id="projectArtifact" items="{{projectArtifacts}}" as="artifact">
             <div class="project-artifact">
-              <value class$="{{ artifact.icon }}"></value>
+              <img src$="{{ artifact.icon }}" />
               <description>{{artifact.name}}</description>
             </div>
         </template>
@@ -140,10 +147,10 @@
       }
 
       var valueIconsMap = {
-        '-1': 'icon-emo-unhappy',
-        '0': 'icon-emo-sleep',
-        '1': 'icon-emo-happy',
-        '': 'icon-cancel'
+        '-1': './icons/icon-emo-unhappy.png',
+        '0': './icons/icon-emo-sleep.png',
+        '1': './icons/icon-emo-happy.png',
+        '': './icons/icon-cancel.png'
       };
 
       Polymer({
