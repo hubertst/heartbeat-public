@@ -134,10 +134,13 @@
         var visibleNum = 0;
         var visible = false;
         projectsList.forEach(function (el, idx) {
-          console.log(offset, idx, visibleNum);
-          if (visibleNum < 8) {
-            visibleNum++;
+          if (visibleNum < 9) {
+            visible = true;
+          } else {
+            visible = false;
           }
+          
+          visibleNum++;
 
           projects.push({
             'projectname': el.projectname,
