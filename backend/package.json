@@ -19,5 +19,7 @@
     "socket.io": "^1.3.2",
     "winston": "^0.9.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "google-spreadsheet": "~1.0.1"
+  }
 }

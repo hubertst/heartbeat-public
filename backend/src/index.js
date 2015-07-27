@@ -28,11 +28,11 @@ var SupportedPlugins = [
     require('./plugins/ion'),
     require('./plugins/rooms'),
     require('./plugins/github'),
-    // require('./plugins/hipchat'),
     require('./plugins/weather'),
     require('./plugins/breaking'),
     require('./plugins/network'),
-    require('./plugins/slack')
+    require('./plugins/slack'),
+    require('./plugins/projects')
 ];
 SupportedPlugins.forEach(function (plugin) {
     merge(plugin.options, config.plugins[plugin.uniqueId]);
