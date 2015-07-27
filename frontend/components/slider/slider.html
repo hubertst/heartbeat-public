@@ -5,18 +5,22 @@
   <style>
     :host {
       display: block;
-      height: 400px;
+      height: 480px;
       position: relative;
       text-align: center;
     }
 
-    .slide-item {
+    :host .slide-item {
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       position: absolute;
       color: white;
+    }
+
+    :host hb-message {
+      z-index: 10;
     }
   </style>
 
@@ -25,9 +29,7 @@
       <hb-message class="slide-item" message="{{item.message}}">
       </hb-message>
     </template>
-    <template is="dom-if" if="{{isProjectVisible}}">
-      <p class="slide-item" style="color: white;">project</p>
-    </template>
+    <hb-projects-board class="slide-item" hidden$="{{!isProjectVisible}}"></hb-projects-board>
 
     <socket-connection endpoint="messages"
                        on-data="onData">
@@ -69,7 +71,6 @@
           if (this.isProjectVisible) {
             this.slideIndex = (this.slideIndex + 1) % this.slides.length;
           }
-          console.log(this.slideIndex)
           this.slideStartTime = currentTime;
           this.invalidateSlide(this.isProjectVisible);
         }
