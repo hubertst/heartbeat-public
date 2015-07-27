@@ -1,0 +1,26 @@
+<link rel="import" href="slide.html">
+<link rel="import" href="../socket-connection.html">
+
+<dom-module id="hb-slider">
+  <template>
+    <template is="dom-repeat" id="slides" items="{{slides}}">
+      <slide duration="item.duration"></slide>
+    </template>
+
+    <socket-connection endpoint="messages"
+                       on-data="onData">
+    </socket-connection>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'hb-slider',
+      properties: {
+        'time-per-slide': String
+      },
+      onData: function(ev, data) {
+        this.slides = data;
+      }
+    })
+  </script>
+</dom-module>
