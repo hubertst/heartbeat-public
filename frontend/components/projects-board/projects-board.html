@@ -93,7 +93,10 @@
       <div id="projects-graph">
         <div id="projects-graph-legend"></div>
         <template is="dom-repeat" id="projects" items="{{projects}}" as="project">
-          <div class$="{{ project.class }}">{{ project.projectshortname }}</div>
+          <div class$="{{ project.class }}">
+            <div class="shortname">{{ project.projectshortname }}</div>
+            <template is="dom-if" if="{{ project.active }}">{{ project.projectname }}</template>
+          </div>
         </template>
       </div>
     </div>
@@ -177,6 +180,7 @@
             'projectname': el.projectname,
             'projectshortname': el.projectshortname,
             'color': getColor(idx),
+            'active': false,
             'class': 'project color-' + getColor(idx),
             'teamspirit': el.teamspirit,
             'clientmood': el.clientmood,
@@ -200,6 +204,7 @@
           if (this.projects.length < VISIBLE_PROJECTS_COUNT) {
             that.projects = that.projects.concat(projectsList.slice(0, VISIBLE_PROJECTS_COUNT - that.projects.length));
           }
+          that.projects[2].active = true;
           that.projectArtifacts = getProjectInfo(that.projects[2]);
           that.color = 'project-artifact color-' + that.projects[2].color;
 
@@ -213,6 +218,10 @@
             if (that.projects.length < VISIBLE_PROJECTS_COUNT) {
               that.projects = that.projects.concat(projectsList.slice(0, VISIBLE_PROJECTS_COUNT - that.projects.length));
             }
+            that.projects.forEach(function (el) {
+              el.active = false;
+            });
+            that.projects[2].active = true;
             that.projectArtifacts = getProjectInfo(that.projects[2]);
             that.color = 'project-artifact color-' + that.projects[2].color;
           }, 1000);
