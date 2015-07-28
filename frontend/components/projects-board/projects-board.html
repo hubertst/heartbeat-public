@@ -26,7 +26,7 @@
     }
     .project {
       display: flex;
-      flex-grow: 1;
+      flex: 1;
     }
     #project-artifacts {
       display: flex;
@@ -38,13 +38,42 @@
     .project-artifact {
       padding: 3em 0;
       width: 20%;
-      background-color: #A9E4CD;
       text-align: center;
       height: 260px;
     }
     .project-artifact img {
       margin-bottom: 30px;
       height: 90px;
+    }
+    .color-1 {
+      background-color: #8ee4cd;
+    }
+    .color-2 {
+      background-color: #54dcfd;
+    }
+    .color-3 {
+      background-color: #15c68d;
+    }
+    .color-4 {
+      background-color: #ff615e;
+    }
+    .color-5 {
+      background-color: #ff8f00;
+    }
+    .color-6 {
+      background-color: #ff5a00;
+    }
+    .color-7 {
+      background-color: #c0eb7c;
+    }
+    .color-8 {
+      background-color: #31a3ff;
+    }
+    .color-9 {
+      background-color: #aaa7fb;
+    }
+    .color-10 {
+      background-color: #9a67fb;
     }
     value, description {
       display: block;
@@ -64,14 +93,14 @@
       <div id="projects-graph">
         <div id="projects-graph-legend"></div>
         <template is="dom-repeat" id="projects" items="{{projects}}" as="project">
-          <div class="project">{{ project.projectshortname }}</div>
+          <div class$="{{ project.class }}">{{ project.projectshortname }}</div>
         </template>
       </div>
     </div>
     <div id="project-artifacts-wrapper">
       <div id="project-artifacts">
         <template is="dom-repeat" id="projectArtifact" items="{{projectArtifacts}}" as="artifact">
-            <div class="project-artifact">
+            <div class$="{{ color }}">
               <img src$="{{ artifact.icon }}" />
               <description>{{artifact.name}}</description>
             </div>
@@ -90,6 +119,12 @@
         '1': './icons/icon-emo-happy.png',
         '': './icons/icon-cancel.png'
       };
+
+      var colors = ['#8ee4cd', '#54dcfd', '#15c68d', '#ff615e', '#ff8f00', '#ff5a00', '#c0eb7c', '#31a3ff', '#aaa7fb', '#9a67fb']
+
+      function getColor(idx) {
+        return (idx % colors.length + 1);
+      }
 
       function getProjectInfo(project) {
         return [{
@@ -136,11 +171,13 @@
       };
 
       function getProjects(projectsList) {
-        return projectsList.map(function (el) {
+        return projectsList.map(function (el, idx) {
           var evaluation = projectEvaluation(el.teamspirit, el.clientmood, el.scrumdaily, el.scrumplanning, el.scrumretro);
           return {
             'projectname': el.projectname,
             'projectshortname': el.projectshortname,
+            'color': getColor(idx),
+            'class': 'project color-' + getColor(idx),
             'teamspirit': el.teamspirit,
             'clientmood': el.clientmood,
             'scrumdaily': el.scrumdaily,
@@ -163,9 +200,8 @@
           if (this.projects.length < VISIBLE_PROJECTS_COUNT) {
             that.projects = that.projects.concat(projectsList.slice(0, VISIBLE_PROJECTS_COUNT - that.projects.length));
           }
-          // TODO
-          console.log(that.projects[2])
           that.projectArtifacts = getProjectInfo(that.projects[2]);
+          that.color = 'project-artifact color-' + that.projects[2].color;
 
           setInterval(function () {
             projectStartIdx += 1;
@@ -177,8 +213,7 @@
             if (that.projects.length < VISIBLE_PROJECTS_COUNT) {
               that.projects = that.projects.concat(projectsList.slice(0, VISIBLE_PROJECTS_COUNT - that.projects.length));
             }
-            console.log(that.projects[2])
-            that.projectArtifacts = getProjectInfo(that.projects[2]);
+            that.color = 'project-artifact color-' + that.projects[2].color;
           }, 1000);
         }
       });
