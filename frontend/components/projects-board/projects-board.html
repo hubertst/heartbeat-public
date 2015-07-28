@@ -213,6 +213,7 @@
             if (that.projects.length < VISIBLE_PROJECTS_COUNT) {
               that.projects = that.projects.concat(projectsList.slice(0, VISIBLE_PROJECTS_COUNT - that.projects.length));
             }
+            that.projectArtifacts = getProjectInfo(that.projects[2]);
             that.color = 'project-artifact color-' + that.projects[2].color;
           }, 1000);
         }
