@@ -64,9 +64,7 @@
       <div id="projects-graph">
         <div id="projects-graph-legend"></div>
         <template is="dom-repeat" id="projects" items="{{projects}}" as="project">
-          <template is="dom-if" if="{{ project.visible }}">
-            <div class="project">{{ project.projectshortname }}</div>
-          </template>
+          <div class="project">{{ project.projectshortname }}</div>
         </template>
       </div>
     </div>
@@ -86,22 +84,29 @@
 
   <script>
     (function () {
-      function getProjectInfo(projectsList, idx) {
+      var valueIconsMap = {
+        '-1': './icons/icon-emo-unhappy.png',
+        '0': './icons/icon-emo-sleep.png',
+        '1': './icons/icon-emo-happy.png',
+        '': './icons/icon-cancel.png'
+      };
+
+      function getProjectInfo(project) {
         return [{
               name: 'Team Spirit',
-              icon: valueIconsMap[projectsList[idx]['teamspirit']]
+              icon: valueIconsMap[project['teamspirit']]
             }, {
               name: 'Client Mood',
-              icon: valueIconsMap[projectsList[idx]['clientmood']]
+              icon: valueIconsMap[project['clientmood']]
             }, {
               name: 'Scrum daily',
-              icon: valueIconsMap[projectsList[idx]['scrumdaily']]
+              icon: valueIconsMap[project['scrumdaily']]
             }, {
               name: 'Scrum planning',
-              icon: valueIconsMap[projectsList[idx]['scrumplanning']]
+              icon: valueIconsMap[project['scrumplanning']]
             }, {
               name: 'Scrum retro',
-              icon: valueIconsMap[projectsList[idx]['scrumplanning']]
+              icon: valueIconsMap[project['scrumretro']]
             }
           ];
       };
@@ -130,52 +135,50 @@
         return result;
       };
 
-      function getProjects(projectsList, offset) {
-        var projects = [];
-        var visibleNum = 0;
-        var visible = false;
-        projectsList.forEach(function (el, idx) {
-          if (visibleNum < 9) {
-            visible = true;
-          } else {
-            visible = false;
-          }
-
-          visibleNum++;
-
-          projects.push({
+      function getProjects(projectsList) {
+        return projectsList.map(function (el) {
+          var evaluation = projectEvaluation(el.teamspirit, el.clientmood, el.scrumdaily, el.scrumplanning, el.scrumretro);
+          return {
             'projectname': el.projectname,
             'projectshortname': el.projectshortname,
-            'projectevaluation': projectEvaluation(el.teamspirit, el.clientmood, el.scrumdaily, el.scrumplanning,
-                el.scrumplanning),
-            'visible': visible
-          });
+            'teamspirit': el.teamspirit,
+            'clientmood': el.clientmood,
+            'scrumdaily': el.scrumdaily,
+            'scrumplanning': el.scrumplanning,
+            'scrumretro': el.scrumretro,
+            'projectevaluation': evaluation
+          };
         });
-        return projects;
       }
-
-      var valueIconsMap = {
-        '-1': './icons/icon-emo-unhappy.png',
-        '0': './icons/icon-emo-sleep.png',
-        '1': './icons/icon-emo-happy.png',
-        '': './icons/icon-cancel.png'
-      };
 
       Polymer({
         is: 'hb-projects-board',
         onData: function (ev, data) {
-          var projectsList = data.projectsList;
-          var idx = 0;
+          var VISIBLE_PROJECTS_COUNT = 9;
+          var projectsList = getProjects(data.projectsList);
           var that = this;
-          that.projects = getProjects(projectsList, idx);
-          that.projectArtifacts = getProjectInfo(projectsList, idx);
-          idx++;
+          var projectStartIdx = 0;
+
+          this.projects = projectsList.slice(projectStartIdx, projectStartIdx + VISIBLE_PROJECTS_COUNT);
+          if (this.projects.length < VISIBLE_PROJECTS_COUNT) {
+            that.projects = that.projects.concat(projectsList.slice(0, VISIBLE_PROJECTS_COUNT - that.projects.length));
+          }
+          // TODO
+          console.log(that.projects[2])
+          that.projectArtifacts = getProjectInfo(that.projects[2]);
 
           setInterval(function () {
-            that.projects = getProjects(projectsList, idx);
-            that.projectArtifacts = getProjectInfo(projectsList, idx);
-            idx++;
-            if (idx > projectsList.length - 1) idx = 0;
+            projectStartIdx += 1;
+            if (projectStartIdx === projectsList.length) {
+              projectStartIdx = 0;
+            }
+
+            that.projects = projectsList.slice(projectStartIdx, projectStartIdx + VISIBLE_PROJECTS_COUNT);
+            if (that.projects.length < VISIBLE_PROJECTS_COUNT) {
+              that.projects = that.projects.concat(projectsList.slice(0, VISIBLE_PROJECTS_COUNT - that.projects.length));
+            }
+            console.log(that.projects[2])
+            that.projectArtifacts = getProjectInfo(that.projects[2]);
           }, 1000);
         }
       });
