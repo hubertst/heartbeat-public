@@ -123,7 +123,10 @@
         '': './icons/icon-cancel.png'
       };
 
-      var colors = ['#8ee4cd', '#54dcfd', '#15c68d', '#ff615e', '#ff8f00', '#ff5a00', '#c0eb7c', '#31a3ff', '#aaa7fb', '#9a67fb']
+      var colors = [
+        '#8ee4cd', '#54dcfd', '#15c68d', '#ff615e',
+        '#ff8f00', '#ff5a00', '#c0eb7c', '#31a3ff', '#aaa7fb', '#9a67fb'
+      ];
 
       function getColor(idx) {
         return (idx % colors.length + 1);
@@ -132,19 +135,19 @@
       function getProjectInfo(project) {
         return [{
               name: 'Team Spirit',
-              icon: valueIconsMap[project['teamspirit']]
+              icon: valueIconsMap[project.teamspirit]
             }, {
               name: 'Client Mood',
-              icon: valueIconsMap[project['clientmood']]
+              icon: valueIconsMap[project.clientmood]
             }, {
               name: 'Scrum daily',
-              icon: valueIconsMap[project['scrumdaily']]
+              icon: valueIconsMap[project.scrumdaily]
             }, {
               name: 'Scrum planning',
-              icon: valueIconsMap[project['scrumplanning']]
+              icon: valueIconsMap[project.scrumplanning]
             }, {
               name: 'Scrum retro',
-              icon: valueIconsMap[project['scrumretro']]
+              icon: valueIconsMap[project.scrumretro]
             }
           ];
       };
@@ -224,7 +227,7 @@
             that.projects[2].active = true;
             that.projectArtifacts = getProjectInfo(that.projects[2]);
             that.color = 'project-artifact color-' + that.projects[2].color;
-          }, 1000);
+          }, 2500);
         }
       });
     })();
